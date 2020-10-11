@@ -8,7 +8,7 @@ import {
     changeSecondaryCur,
     $secondaryCurrency,
     $currenciesOptions,
-} from '../../core/models';
+} from '../../core/models/converter';
 import { Select } from '@ui';
 import { colors } from '@constants';
 

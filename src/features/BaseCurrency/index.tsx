@@ -2,7 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { useStore } from 'effector-react';
 import { Preloader } from '@features';
-import { fetchCurrencies, $currencies, changeBaseCur, $baseCurrency, $currenciesOptions } from '../../core/models';
+import {
+    fetchCurrencies,
+    $currencies,
+    changeBaseCur,
+    $baseCurrency,
+    $currenciesOptions,
+} from '../../core/models/converter';
 import { Select } from '@ui';
 import { colors } from '@constants';
 

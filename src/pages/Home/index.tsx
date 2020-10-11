@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useGate, useStore } from 'effector-react';
 import { Preloader } from '@features';
-import { tearUp, fetchCurrencies, $currencies } from '../../core/models';
+import { tearUp, fetchCurrencies, $currencies } from '../../core/models/converter';
 import { Button } from '@ui';
 import { colors } from '@constants';
 import { BaseCurrency } from '@features';

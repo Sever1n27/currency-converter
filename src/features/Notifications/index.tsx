@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useStore } from 'effector-react';
-import { $error, clearError } from '../../core/models';
+import { $error, clearError } from '../../core/models/errors';
 import { colors } from '@constants';
 
 type ErrorNotificationProps = {

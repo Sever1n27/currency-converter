@@ -11,7 +11,7 @@ import {
     $baseAmount,
     $secondaryAmount,
     changeBaseAmount,
-} from '../../core/models';
+} from '../../core/models/converter';
 import { Input } from '@ui';
 import { colors } from '@constants';
 import { BaseCurrency, OutputCurrency } from '@features';

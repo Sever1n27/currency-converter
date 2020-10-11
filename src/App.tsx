@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import { StyleReset } from './styleReset';
 import { Header, Footer, Notifications } from '@features';
+import './core/models/init';
 import { Converter, Home } from '@pages';
 
 const AppContainer = styled.div`
