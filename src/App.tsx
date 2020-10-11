@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import { StyleReset } from './styleReset';
-import { Header, Footer, Notifications } from '@features';
+import { Header, Notifications } from '@features';
 import './core/models/init';
 import { Converter, Home } from '@pages';
 
@@ -10,7 +10,7 @@ const AppContainer = styled.div`
     width: 100%;
     min-height: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 0;
     margin: 0;
     flex-direction: column;
@@ -43,7 +43,6 @@ export function App(): JSX.Element {
                         </Route>
                     </Switch>
                 </ContentContainer>
-                <Footer />
             </Router>
         </AppContainer>
     );

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import getSymbolFromCurrency from 'currency-symbol-map';
 import { useGate, useStore } from 'effector-react';
 import { Preloader } from '@features';
 import { tearUp, fetchCurrencies, $currencies } from '../../core/models/converter';
@@ -31,10 +32,29 @@ const ListWrapper = styled.div`
     border-radius: 4px;
     background: ${colors.mainlight};
     flex-grow: 1;
+    color: ${colors.secondarylight};
 `;
 
 const ListItem = styled.li`
     padding: 0;
+    display: flex;
+    letter-spacing: 0.8px;
+    padding: 5px 0;
+    border-bottom: 1px solid ${colors.secondarylight};
+    font-weight: bold;
+    &:last-child {
+        border-bottom: none;
+    }
+    &:first-child {
+        padding-top: 0;
+    }
+`;
+
+const CurrencySymbol = styled.span``;
+
+const CurrencyName = styled.span`
+    min-width: 60px;
+    display: block;
 `;
 
 export function Home(): JSX.Element {
@@ -53,7 +73,9 @@ export function Home(): JSX.Element {
                             <List>
                                 {Object.keys(currenciesList?.rates).map((currency) => (
                                     <ListItem key={currency}>
-                                        {currency}: {currenciesList.rates[currency]}
+                                        <CurrencyName>{currency}:</CurrencyName>
+                                        {currenciesList.rates[currency].toFixed(2)}&nbsp;
+                                        <CurrencySymbol>{getSymbolFromCurrency(currency)}</CurrencySymbol>
                                     </ListItem>
                                 ))}
                             </List>

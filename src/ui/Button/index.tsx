@@ -14,6 +14,9 @@ const StyledButton = styled.button`
     &:hover {
         background: ${colors.mainlight};
     }
+    &:focus {
+        outline: none;
+    }
 `;
 
 type ButtonProps = {

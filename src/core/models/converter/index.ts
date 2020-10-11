@@ -19,15 +19,26 @@ async function handleFetch(url: string) {
         return res.json();
     }
 }
-export const changeBaseCur = createEvent<string>();
-const $url = createStore(url).on(changeBaseCur, (state, payload) => {
-    const currentUrl = new URL(state);
-    currentUrl.searchParams.set('base', payload);
+
+function handleQueryString(url: string, param: string) {
+    const currentUrl = new URL(url);
+    currentUrl.searchParams.set('base', param);
     return currentUrl.toString();
+}
+
+export const changeSecondaryCur = createEvent();
+export const changeBaseCur = createEvent<any>();
+const swapCurrenciesFx = createEffect((obj: any) => {
+    changeBaseCur(obj.$secondaryCurrency);
+    changeSecondaryCur(obj.$baseCurrency);
 });
+
+const $url = createStore(url).on(changeBaseCur, (state, payload) => handleQueryString(state, payload));
 
 export const fetchCurrencies = createEffect(async () => handleFetch($url.getState()));
 export const $currencies = createStore<Currencies | null>(null).on(fetchCurrencies.doneData, (state, result) => result);
+
+export const swapCurrencies = createEvent();
 
 export const $baseCurrency = $currencies
     .map((state) => (state ? state.base : 'EUR'))
@@ -36,7 +47,7 @@ export const $baseCurrency = $currencies
 export const $currenciesOptions = $currencies.map((currenciesList) =>
     currenciesList ? Object.keys(currenciesList.rates).map((key) => ({ label: key, value: key })) : [],
 );
-export const changeSecondaryCur = createEvent();
+
 export const $secondaryCurrency = createStore('CAD').on(changeSecondaryCur, (state, payload) => payload);
 export const changeBaseAmount = createEvent<number>();
 export const $baseAmount = createStore(0).on(changeBaseAmount, (state, payload) => payload);
@@ -54,6 +65,13 @@ const changeBaseAmountFx = createEffect((obj: any) => {
 export const $secondaryAmount = createStore(0)
     .on(changeBaseAmountFx.doneData, (state, result) => result)
     .on(changeCurFx.doneData, (state, result) => result);
+
+sample({
+    source: { $baseCurrency, $secondaryCurrency },
+    clock: [swapCurrencies],
+    fn: (obj: any) => obj,
+    target: swapCurrenciesFx,
+});
 
 sample({
     source: { $currencies, $baseAmount, $secondaryCurrency },

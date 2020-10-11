@@ -11,8 +11,9 @@ import {
     $baseAmount,
     $secondaryAmount,
     changeBaseAmount,
+    swapCurrencies,
 } from '../../core/models/converter';
-import { Input } from '@ui';
+import { Input, Button } from '@ui';
 import { colors } from '@constants';
 import { BaseCurrency, OutputCurrency } from '@features';
 
@@ -39,6 +40,12 @@ const EqualitySymbol = styled.span`
     margin: 0 10px;
 `;
 
+const SwapWrapper = styled.div`
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+`;
+
 export function Converter(): JSX.Element {
     useGate(tearUp);
     const loading = useStore(fetchCurrencies.pending);
@@ -53,6 +60,9 @@ export function Converter(): JSX.Element {
             {currenciesList && (
                 <>
                     <BaseCurrency />
+                    <SwapWrapper>
+                        <Button label="Swap" disabled={loading} onClick={() => swapCurrencies()} />
+                    </SwapWrapper>
                     <OutputCurrency />
                     <FormWrapper>
                         <Input
@@ -65,7 +75,9 @@ export function Converter(): JSX.Element {
                         <Input
                             placeholder="Result"
                             label={`Amount of ${secondaryCurrency}`}
-                            onChange={() => {}}
+                            onChange={() => {
+                                return;
+                            }}
                             disabled
                             value={secondaryAmount.toFixed(2)}
                         />

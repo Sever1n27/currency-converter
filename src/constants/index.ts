@@ -1,4 +1,4 @@
-import { lighten, darken } from 'polished';
+import { lighten } from 'polished';
 
 export const colors = {
     main: '#0049b7',

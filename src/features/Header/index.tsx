@@ -21,7 +21,7 @@ export function Header(): JSX.Element {
     return (
         <Wrapper>
             <Navbar>
-                <Link to="/">Курсы валют</Link>
+                <Link to="/">Курс валют</Link>
                 <Link to="/converter">Конвертер валют</Link>
             </Navbar>
         </Wrapper>
