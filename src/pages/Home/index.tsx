@@ -1,18 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useGate, useStore } from 'effector-react';
+import { Preloader } from '@features';
 import { tearUp, fetchCurrencies, $currencies } from '../../core/models';
 import { Button } from '@ui';
+import { colors } from '@constants';
+import { BaseCurrency } from '@features';
 
-const BaseCurrency = styled.div`
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.3);
-    color: white;
+const Wrapper = styled.div`
+    color: #000;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+`;
+
+const CurrenciesWrapper = styled.div`
+    flex-grow: 1;
+    margin-right: 20px;
 `;
 
 const List = styled.ul`
     padding: 10px 0;
-    margin: 0;
     display: flex;
     flex-direction: column;
     list-style: none;
@@ -20,7 +28,9 @@ const List = styled.ul`
 
 const ListWrapper = styled.div`
     padding: 20px;
-    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    background: ${colors.mainlight};
+    flex-grow: 1;
 `;
 
 const ListItem = styled.li`
@@ -32,10 +42,11 @@ export function Home(): JSX.Element {
     const loading = useStore(fetchCurrencies.pending);
     const currenciesList: any = useStore($currencies);
     return (
-        <>
+        <Wrapper>
+            {loading && <Preloader />}
             {currenciesList && (
-                <>
-                    <BaseCurrency>Base currency: {currenciesList?.base}</BaseCurrency>
+                <CurrenciesWrapper>
+                    <BaseCurrency />
                     {currenciesList.rates && (
                         <ListWrapper>
                             Currency course:
@@ -48,9 +59,9 @@ export function Home(): JSX.Element {
                             </List>
                         </ListWrapper>
                     )}
-                </>
+                </CurrenciesWrapper>
             )}
             <Button onClick={() => fetchCurrencies()} label="Refresh" disabled={loading} />
-        </>
+        </Wrapper>
     );
 }

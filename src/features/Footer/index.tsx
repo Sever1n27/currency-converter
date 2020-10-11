@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { colors } from '@constants';
 
 const Wrapper = styled.div`
     width: 100%;
-    min-height: 200px;
-    background: blue;
+    background: ${colors.main};
     padding: 20px;
 `;
 

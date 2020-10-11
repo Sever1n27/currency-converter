@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from '@ui';
+import { colors } from '@constants';
 
 const Wrapper = styled.div`
     width: 100%;
-    background: blue;
+    background: ${colors.main};
     padding: 20px;
 `;
 

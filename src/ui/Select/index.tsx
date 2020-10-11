@@ -2,11 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { colors } from '@constants';
 
-const StyledInput = styled.input`
+const StyledSelect = styled.select`
     border: 2px solid ${colors.neutral};
     border-radius: 4px;
     padding: 12px;
     transition: all 0.3s ease;
+    background: #fff;
     &:focus {
         outline: none;
         border-color: ${colors.main};
@@ -20,25 +21,30 @@ const StyledLabel = styled.label`
     font-size: 12px;
 `;
 
-type InputProps = {
-    value: number | string;
+type SelectProps = {
     label?: string;
-    placeholder: string;
+    value: string;
     disabled?: boolean;
+    options: { label: string; value: any }[];
     onChange: any;
 };
 
-export function Input(props: InputProps): JSX.Element {
-    const { onChange, disabled, placeholder, value, label } = props;
+export function Select(props: SelectProps): JSX.Element {
+    const { onChange, label, value, disabled, options } = props;
     const handleChange = (e: any) => {
-        if (typeof onChange === 'function') {
-            onChange(parseInt(e.target.value) || 0);
-        }
+        onChange(e.target.value);
     };
+
     return (
         <StyledLabel>
             {label || ''}
-            <StyledInput disabled={disabled} placeholder={placeholder} onChange={handleChange} value={value} />
+            <StyledSelect onChange={handleChange} disabled={disabled} value={value}>
+                {options.map((item) => (
+                    <option key={item.label} value={item.value}>
+                        {item.label}
+                    </option>
+                ))}
+            </StyledSelect>
         </StyledLabel>
     );
 }

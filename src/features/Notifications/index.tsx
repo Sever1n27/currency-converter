@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useStore } from 'effector-react';
 import { $error, clearError } from '../../core/models';
+import { colors } from '@constants';
 
 type ErrorNotificationProps = {
     visible?: boolean;
@@ -12,7 +13,7 @@ const ErrorNotification = styled.div<ErrorNotificationProps>`
     left: 30%;
     right: 30%;
     padding: 20px;
-    background: #dc6060;
+    background: ${colors.secondary};
     color: #fff;
     top: 0;
     border-radius: 4px;
@@ -40,7 +41,7 @@ export function Notifications(): JSX.Element | null {
             clearTimeout(timeoutRefVisible.current);
             clearTimeout(timeoutRefMounted.current);
         };
-    }, [error]);
+    }, [error, unmountDelay, hideDelay]);
 
     return error && <ErrorNotification visible={visible}>{error.message}</ErrorNotification>;
 }

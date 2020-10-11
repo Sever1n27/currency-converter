@@ -1,33 +1,63 @@
 import React from 'react';
-import styled from 'styled-components';
-import { useStore } from 'effector-react';
-import { fetchCurrencies } from '../../core/models';
+import styled, { keyframes } from 'styled-components';
+
+const bounce = keyframes`
+    0% {
+        transform: scale(0)
+    }
+    50% {
+        transform: scale(1.0)
+    }
+    100% {
+        transform: scale(0)
+    }
+`;
+
+const Dot = styled.div`
+    width: 10px;
+    height: 10px;
+    background-color: #2d55b2;
+    border-radius: 50%;
+    display: inline-block;
+    animation: ${bounce} 1.4s infinite ease-in-out both;
+    & + & {
+        margin-left: 5px;
+    }
+    :nth-child(1) {
+        animation-delay: -0.32s;
+    }
+    :nth-child(2) {
+        animation-delay: -0.16s;
+    }
+    :nth-child(3) {
+        animation-delay: -0s;
+    }
+`;
 
 const Wrapper = styled.div`
-    position: fixed;
-    background: rgba(255, 255, 255, 0.6);
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
 `;
 
 export function Preloader(): JSX.Element | null {
     const [visible, setVisible] = React.useState(false);
     const timeoutRef = React.useRef(0);
-    const loading = useStore(fetchCurrencies.pending);
     const revealDelay = 200;
-
     React.useEffect(() => {
-        if (loading) {
-            timeoutRef.current = setTimeout(() => setVisible(true), revealDelay);
-        }
+        timeoutRef.current = setTimeout(() => setVisible(true), revealDelay);
         return () => {
             clearTimeout(timeoutRef.current);
             setVisible(false);
         };
-    }, [loading]);
+    }, [revealDelay]);
 
-    return visible ? <Wrapper>preloader</Wrapper> : null;
+    return visible ? (
+        <Wrapper>
+            <Dot />
+            <Dot />
+            <Dot />
+        </Wrapper>
+    ) : null;
 }

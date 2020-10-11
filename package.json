@@ -5,6 +5,7 @@
   "dependencies": {
     "effector": "^21.5.0",
     "effector-react": "^21.0.6",
+    "polished": "^4.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router": "^5.2.0",

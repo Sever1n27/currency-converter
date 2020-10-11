@@ -1,7 +1,7 @@
-import { createEffect, createStore, createEvent, guard, split } from 'effector';
+import { createEffect, createStore, createEvent, guard, split, forward, sample } from 'effector';
 import { createGate } from 'effector-react';
 
-const url = 'https://api.exchangeratesapi.io/latest123';
+const url = 'https://api.exchangeratesapi.io/latest';
 
 type Currencies = {
     base: string;
@@ -11,18 +11,62 @@ type Currencies = {
 
 export const tearUp = createGate();
 
-export const fetchCurrencies = createEffect(async () => {
+async function handleFetch(url: string) {
     const res = await fetch(url);
     if (!res.ok) {
         throw new Error(`${res.status}`);
     } else {
         return res.json();
     }
+}
+export const changeBaseCur = createEvent<string>();
+const $url = createStore(url).on(changeBaseCur, (state, payload) => {
+    const currentUrl = new URL(state);
+    currentUrl.searchParams.set('base', payload);
+    return currentUrl.toString();
 });
 
+export const fetchCurrencies = createEffect(async () => handleFetch($url.getState()));
 export const $currencies = createStore<Currencies | null>(null).on(fetchCurrencies.doneData, (state, result) => result);
 
-export const $availableCurrencies = $currencies.map((state) => state?.rates);
+export const $baseCurrency = $currencies
+    .map((state) => (state ? state.base : 'EUR'))
+    .on(changeBaseCur, (state, payload) => payload);
+
+export const $currenciesOptions = $currencies.map((currenciesList) =>
+    currenciesList ? Object.keys(currenciesList.rates).map((key) => ({ label: key, value: key })) : [],
+);
+export const changeSecondaryCur = createEvent();
+export const $secondaryCurrency = createStore('CAD').on(changeSecondaryCur, (state, payload) => payload);
+export const changeBaseAmount = createEvent<number>();
+export const $baseAmount = createStore(0).on(changeBaseAmount, (state, payload) => payload);
+export const $secondaryAmount = $currencies
+    .map((currencies) => {
+        if (currencies) {
+            return $baseAmount.getState() * currencies?.rates[$secondaryCurrency.getState()];
+        }
+        return 0;
+    })
+    .on(changeBaseAmount, (state, payload) => {
+        const currencies = $currencies.getState();
+        const rates = currencies?.rates;
+        if (rates) {
+            return payload * rates[$secondaryCurrency.getState()];
+        }
+    })
+    .on(changeSecondaryCur, (state, payload) => {
+        const currencies = $currencies.getState();
+        const rates = currencies?.rates;
+        const baseAmount = $baseAmount.getState();
+        if (rates) {
+            return baseAmount * rates[`${payload}`];
+        }
+    });
+
+forward({
+    from: changeBaseCur,
+    to: fetchCurrencies,
+});
 
 export const $error = createStore<Record<string, string> | null>(null);
 
