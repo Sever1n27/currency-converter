@@ -4,7 +4,6 @@ import getSymbolFromCurrency from 'currency-symbol-map';
 import { useGate, useStore } from 'effector-react';
 import { Preloader } from '@features';
 import { tearUp, fetchCurrencies, $currencies } from '../../core/models/converter';
-import { Button } from '@ui';
 import { colors } from '@constants';
 import { BaseCurrency } from '@features';
 
@@ -83,7 +82,6 @@ export function Home(): JSX.Element {
                     )}
                 </CurrenciesWrapper>
             )}
-            <Button onClick={() => fetchCurrencies()} label="Refresh" disabled={loading} />
         </Wrapper>
     );
 }
