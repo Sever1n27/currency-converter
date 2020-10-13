@@ -1,14 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useStore } from 'effector-react';
-import { Preloader } from '@features';
-import {
-    fetchCurrencies,
-    $currencies,
-    changeSecondaryCur,
-    $secondaryCurrency,
-    $currenciesOptions,
-} from '../../core/models/converter';
+import { $currencies, changeSecondaryCur, $secondaryCurrency, $currenciesOptions } from '../../core/models/converter';
 import { Currencies } from '@types';
 import { Select } from '@ui';
 import { colors } from '@constants';
@@ -30,13 +23,11 @@ const Inner = styled.div`
 `;
 
 export function OutputCurrency() {
-    const loading = useStore(fetchCurrencies.pending);
     const currenciesList: Currencies = useStore($currencies);
     const secondaryCurrency: string = useStore($secondaryCurrency);
     const options = useStore($currenciesOptions);
     return (
         <Wrapper>
-            {loading && <Preloader />}
             {currenciesList && (
                 <>
                     <Inner>Output currency: {secondaryCurrency}</Inner>

@@ -38,7 +38,7 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    position: fixed;
+    position: absolute;
     left: 0;
     right: 0;
     top: 0;
@@ -48,6 +48,7 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.7);
+    z-index: 10;
 `;
 
 export function Preloader() {

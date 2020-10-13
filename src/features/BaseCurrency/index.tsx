@@ -1,14 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useStore } from 'effector-react';
-import { Preloader } from '@features';
-import {
-    fetchCurrencies,
-    $currencies,
-    changeBaseCur,
-    $baseCurrency,
-    $currenciesOptions,
-} from '../../core/models/converter';
+import { $currencies, changeBaseCur, $baseCurrency, $currenciesOptions } from '../../core/models/converter';
 import { Currencies } from '@types';
 import { Select } from '@ui';
 import { colors } from '@constants';
@@ -31,13 +24,11 @@ const Inner = styled.div`
 `;
 
 export function BaseCurrency() {
-    const loading: boolean = useStore(fetchCurrencies.pending);
     const currenciesList: Currencies = useStore($currencies);
     const baseCurrency: string = useStore($baseCurrency);
     const options = useStore($currenciesOptions);
     return (
         <Wrapper>
-            {loading && <Preloader />}
             {currenciesList && (
                 <>
                     <Inner>Base currency: {currenciesList.base}</Inner>
