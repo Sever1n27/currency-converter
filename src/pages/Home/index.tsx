@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import getSymbolFromCurrency from 'currency-symbol-map';
-import { useGate, useStore } from 'effector-react';
-import { Preloader } from '@features';
-import { tearUp, fetchCurrencies, $currencies } from '../../core/models/converter';
+import { useStore } from 'effector-react';
+import { Currencies } from '@types';
+import { Preloader, BaseCurrency } from '@features';
+import { fetchCurrencies, $currencies } from '../../core/models/converter';
 import { colors } from '@constants';
-import { BaseCurrency } from '@features';
 
 const Wrapper = styled.div`
     color: #000;
@@ -56,17 +56,16 @@ const CurrencyName = styled.span`
     display: block;
 `;
 
-export function Home(): JSX.Element {
-    useGate(tearUp);
-    const loading = useStore(fetchCurrencies.pending);
-    const currenciesList: any = useStore($currencies);
+export function Home() {
+    const loading: boolean = useStore(fetchCurrencies.pending);
+    const currenciesList: Currencies = useStore($currencies);
     return (
         <Wrapper>
             {loading && <Preloader />}
             {currenciesList && (
                 <CurrenciesWrapper>
                     <BaseCurrency />
-                    {currenciesList.rates && (
+                    {currenciesList?.rates && (
                         <ListWrapper>
                             Currency course:
                             <List>

@@ -17,7 +17,7 @@ const Navbar = styled.nav`
     }
 `;
 
-export function Header(): JSX.Element {
+export function Header() {
     return (
         <Wrapper>
             <Navbar>

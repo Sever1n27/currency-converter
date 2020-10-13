@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useGate, useStore } from 'effector-react';
-import { Preloader } from '@features';
+import { useStore } from 'effector-react';
+import { Preloader, BaseCurrency, OutputCurrency } from '@features';
 import {
-    tearUp,
     fetchCurrencies,
     $currencies,
     $baseCurrency,
@@ -13,9 +12,9 @@ import {
     changeBaseAmount,
     swapCurrencies,
 } from '../../core/models/converter';
+import { Currencies } from '@types';
 import { Input, Button } from '@ui';
 import { colors } from '@constants';
-import { BaseCurrency, OutputCurrency } from '@features';
 
 const Wrapper = styled.div`
     color: ${colors.text};
@@ -46,14 +45,13 @@ const SwapWrapper = styled.div`
     justify-content: center;
 `;
 
-export function Converter(): JSX.Element {
-    useGate(tearUp);
-    const loading = useStore(fetchCurrencies.pending);
-    const baseCurrency = useStore($baseCurrency);
-    const secondaryCurrency = useStore($secondaryCurrency);
-    const baseAmount = useStore($baseAmount);
-    const secondaryAmount = useStore($secondaryAmount);
-    const currenciesList: any = useStore($currencies);
+export function Converter() {
+    const loading: boolean = useStore(fetchCurrencies.pending);
+    const baseCurrency: string = useStore($baseCurrency);
+    const secondaryCurrency: string = useStore($secondaryCurrency);
+    const baseAmount: number = useStore($baseAmount);
+    const secondaryAmount: number = useStore($secondaryAmount);
+    const currenciesList: Currencies = useStore($currencies);
     return (
         <Wrapper>
             {loading && <Preloader />}
@@ -75,9 +73,6 @@ export function Converter(): JSX.Element {
                         <Input
                             placeholder="Result"
                             label={`Amount of ${secondaryCurrency}`}
-                            onChange={() => {
-                                return;
-                            }}
                             disabled
                             value={secondaryAmount.toFixed(2)}
                         />

@@ -16,6 +16,9 @@
             ],
             "@pages": [
                 "pages"
+            ],
+            "@types": [
+                "types"
             ]
         }
     },

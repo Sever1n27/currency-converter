@@ -12,9 +12,9 @@ const StyledLink = styled(RouterLink)`
 
 type LinkProps = {
     to: string;
-    children: string;
+    children: string | JSX.Element;
 };
 
-export function Link(props: LinkProps): JSX.Element {
+export function Link(props: LinkProps) {
     return <StyledLink {...props}>{props.children}</StyledLink>;
 }

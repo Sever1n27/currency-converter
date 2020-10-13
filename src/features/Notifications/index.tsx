@@ -23,11 +23,11 @@ const ErrorNotification = styled.div<ErrorNotificationProps>`
     box-shadow: 0px 10px 22px 0px rgba(0, 0, 0, 0.2);
 `;
 
-export function Notifications(): JSX.Element | null {
-    const error: any = useStore($error);
-    const [visible, setVisible] = React.useState(false);
-    const timeoutRefVisible = React.useRef(0);
-    const timeoutRefMounted = React.useRef(0);
+export function Notifications() {
+    const error: Record<string, string> | null = useStore($error);
+    const [visible, setVisible] = React.useState<boolean>(false);
+    const timeoutRefVisible = React.useRef<number>(0);
+    const timeoutRefMounted = React.useRef<number>(0);
     const hideDelay = 3000;
     const unmountDelay = hideDelay + 1000;
 

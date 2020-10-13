@@ -50,9 +50,9 @@ const Wrapper = styled.div`
     background: rgba(255, 255, 255, 0.7);
 `;
 
-export function Preloader(): JSX.Element | null {
-    const [visible, setVisible] = React.useState(false);
-    const timeoutRef = React.useRef(0);
+export function Preloader() {
+    const [visible, setVisible] = React.useState<boolean>(false);
+    const timeoutRef = React.useRef<number>(0);
     const revealDelay = 200;
     React.useEffect(() => {
         timeoutRef.current = setTimeout(() => setVisible(true), revealDelay);

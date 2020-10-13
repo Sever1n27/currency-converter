@@ -8,6 +8,6 @@ const Wrapper = styled.div`
     padding: 20px;
 `;
 
-export function Footer(): JSX.Element {
+export function Footer() {
     return <Wrapper>Footer</Wrapper>;
 }

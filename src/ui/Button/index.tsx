@@ -22,9 +22,9 @@ const StyledButton = styled.button`
 type ButtonProps = {
     label: string;
     disabled?: boolean;
-    onClick: () => void;
+    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-export function Button(props: ButtonProps): JSX.Element {
+export function Button(props: ButtonProps) {
     return <StyledButton {...props}>{props.label}</StyledButton>;
 }

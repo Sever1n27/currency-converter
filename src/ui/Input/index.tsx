@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Event } from 'effector';
 import { colors } from '@constants';
 
 const StyledInput = styled.input`
@@ -25,12 +26,12 @@ type InputProps = {
     label?: string;
     placeholder: string;
     disabled?: boolean;
-    onChange: any;
+    onChange?: Event<number>;
 };
 
-export function Input(props: InputProps): JSX.Element {
+export function Input(props: InputProps) {
     const { onChange, disabled, placeholder, value, label } = props;
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (typeof onChange === 'function') {
             onChange(parseInt(e.target.value) || 0);
         }

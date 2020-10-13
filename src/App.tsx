@@ -1,10 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
+import { useGate } from 'effector-react';
 import { StyleReset } from './styleReset';
 import { Header, Notifications } from '@features';
-import './core/models/init';
 import { Converter, Home } from '@pages';
+import { tearUp } from './core/models/converter';
 
 const AppContainer = styled.div`
     width: 100%;
@@ -26,7 +27,8 @@ const ContentContainer = styled.div`
     box-shadow: 0px 0px 12px 3px rgba(0, 0, 0, 0.15);
 `;
 
-export function App(): JSX.Element {
+export function App() {
+    useGate(tearUp);
     return (
         <AppContainer>
             <StyleReset />

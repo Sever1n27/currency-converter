@@ -9,6 +9,7 @@ import {
     $baseCurrency,
     $currenciesOptions,
 } from '../../core/models/converter';
+import { Currencies } from '@types';
 import { Select } from '@ui';
 import { colors } from '@constants';
 
@@ -29,9 +30,9 @@ const Inner = styled.div`
     min-width: 200px;
 `;
 
-export function BaseCurrency(): JSX.Element {
-    const loading = useStore(fetchCurrencies.pending);
-    const currenciesList: any = useStore($currencies);
+export function BaseCurrency() {
+    const loading: boolean = useStore(fetchCurrencies.pending);
+    const currenciesList: Currencies = useStore($currencies);
     const baseCurrency: string = useStore($baseCurrency);
     const options = useStore($currenciesOptions);
     return (

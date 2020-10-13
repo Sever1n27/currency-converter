@@ -9,6 +9,7 @@ import {
     $secondaryCurrency,
     $currenciesOptions,
 } from '../../core/models/converter';
+import { Currencies } from '@types';
 import { Select } from '@ui';
 import { colors } from '@constants';
 
@@ -28,9 +29,9 @@ const Inner = styled.div`
     min-width: 200px;
 `;
 
-export function OutputCurrency(): JSX.Element {
+export function OutputCurrency() {
     const loading = useStore(fetchCurrencies.pending);
-    const currenciesList: any = useStore($currencies);
+    const currenciesList: Currencies = useStore($currencies);
     const secondaryCurrency: string = useStore($secondaryCurrency);
     const options = useStore($currenciesOptions);
     return (

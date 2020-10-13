@@ -7,6 +7,7 @@ module.exports = override(
         ['@features']: path.resolve(__dirname, './src/features'),
         ['@core']: path.resolve(__dirname, './src/core'),
         ['@constants']: path.resolve(__dirname, './src/constants'),
+        ['@types']: path.resolve(__dirname, './src/types'),
         ['@pages']: path.resolve(__dirname, './src/pages'),
     }),
 );
