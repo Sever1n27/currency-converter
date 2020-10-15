@@ -1,89 +1,35 @@
-import { createEffect, createStore, createEvent, guard, forward, sample, Store, GetCombinedValue } from 'effector';
-import { createGate } from 'effector-react';
-import { Currencies, CurrenciesObject, CurrenciesContainer } from '@types';
+import { createEffect, combine, createEvent, forward, sample, restore } from 'effector';
+import { Currencies, Rates } from '@types';
 
-const url = 'https://api.exchangeratesapi.io/latest';
-
-export const tearUp = createGate();
-
-async function handleFetch(url: string) {
-    const res = await fetch(url);
-    if (!res.ok) {
-        throw new Error(`${res.status}`);
-    } else {
-        return res.json();
-    }
+async function fetchCurrenciesRequest(currency: string) {
+    const res = await fetch(`https://api.exchangeratesapi.io/latest?base=${currency}`);
+    if (!res.ok) throw new Error(`${res.status}`);
+    return res.json();
 }
 
-function handleQueryString(url: string, key: string, param: string) {
-    const currentUrl = new URL(url);
-    currentUrl.searchParams.set(key, param);
-    return currentUrl.toString();
+function calculateTargetAmount(baseAmount: number, target: string, rates: Rates) {
+    const rate = rates[target] || 0;
+    return baseAmount * rate;
 }
 
-export const changeSecondaryCur = createEvent<string>();
 export const changeBaseCur = createEvent<string>();
-const swapCurrenciesFx = createEffect((obj: CurrenciesObject) => {
-    changeBaseCur(obj.$secondaryCurrency);
-    changeSecondaryCur(obj.$baseCurrency);
-});
-
-const $url = createStore(url).on(changeBaseCur, (state, payload) => handleQueryString(state, 'base', payload));
-
-export const fetchCurrencies = createEffect(async () => handleFetch($url.getState()));
-
-export const $currencies = createStore<Currencies | null>(null).on(fetchCurrencies.doneData, (state, result) => result);
-
+export const changeSecondaryCur = createEvent<string>();
 export const swapCurrencies = createEvent();
+export const fetchCurrencies = createEffect(fetchCurrenciesRequest);
+export const $currencies = restore<Currencies>(fetchCurrencies.doneData, null);
+export const $baseCurrency = restore(changeBaseCur, 'EUR');
+export const $secondaryCurrency = restore(changeSecondaryCur, 'CAD');
+export const $rates = $currencies.map((currencies) => currencies?.rates ?? {});
+export const changeBaseAmount = createEvent<number>();
+export const $baseAmount = restore(changeBaseAmount, 0);
+export const $secondaryAmount = combine($baseAmount, $secondaryCurrency, $rates, calculateTargetAmount);
 
-export const $baseCurrency = $currencies
-    .map((state) => (state ? state.base : 'EUR'))
-    .on(changeBaseCur, (state, payload) => payload);
-
-export const $currenciesOptions = $currencies.map((currenciesList) =>
-    currenciesList ? Object.keys(currenciesList.rates).map((key) => ({ label: key, value: key })) : [],
+export const $currenciesOptions = $rates.map((currenciesList) =>
+    Object.keys(currenciesList).map((key) => ({ label: key, value: key })),
 );
 
-export const $secondaryCurrency = createStore('CAD').on(changeSecondaryCur, (state, payload) => payload);
-export const changeBaseAmount = createEvent<number>();
-export const $baseAmount = createStore(0).on(changeBaseAmount, (state, payload) => payload);
+const swapped = sample(combine($baseCurrency, $secondaryCurrency), swapCurrencies);
 
-const recalculateCurrenciesFx = createEffect((obj: CurrenciesContainer) => {
-    const rates = obj?.$currencies?.rates || {};
-    return obj.$baseAmount * rates[obj.$secondaryCurrency];
-});
-
-export const $secondaryAmount = createStore(0).on(recalculateCurrenciesFx.doneData, (state, result) => result);
-
-sample({
-    source: { $baseCurrency, $secondaryCurrency },
-    clock: [swapCurrencies],
-    fn: (obj: CurrenciesObject) => obj,
-    target: swapCurrenciesFx,
-});
-
-sample({
-    source: { $currencies, $baseAmount, $secondaryCurrency },
-    clock: [changeBaseCur, fetchCurrencies.doneData, changeBaseAmount, changeSecondaryCur],
-    fn: (
-        obj: GetCombinedValue<{
-            $currencies: Store<Currencies | null>;
-            $baseAmount: Store<number>;
-            $secondaryCurrency: Store<string>;
-        }>,
-    ) => obj,
-    target: recalculateCurrenciesFx,
-});
-
-forward({
-    from: changeBaseCur,
-    to: fetchCurrencies,
-});
-
-const listIsEmpty = $currencies.map((state) => !state);
-
-guard({
-    source: tearUp.open,
-    filter: listIsEmpty,
-    target: fetchCurrencies,
-});
+forward({ from: swapped.map(([_, target]) => target), to: changeBaseCur });
+forward({ from: swapped.map(([base, _]) => base), to: changeSecondaryCur });
+forward({ from: $baseCurrency, to: fetchCurrencies });

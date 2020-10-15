@@ -1,16 +1,9 @@
 export type Currencies = {
     base: string;
     date: string;
-    rates: Record<string, number>;
+    rates: Rates;
 } | null;
 
-export type CurrenciesObject = {
-    $secondaryCurrency: string;
-    $baseCurrency: string;
-};
-
-export type CurrenciesContainer = {
-    $baseAmount: number;
-    $secondaryCurrency: string;
-    $currencies: Currencies | null;
+export type Rates = {
+    [key: string]: number;
 };
