@@ -8,7 +8,7 @@ import { $currencies } from '../../core/models/converter';
 import { colors } from '@constants';
 
 const Wrapper = styled.div`
-    color: #000;
+    color: ${colors.secondarylight};
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -16,7 +16,6 @@ const Wrapper = styled.div`
 
 const CurrenciesWrapper = styled.div`
     flex-grow: 1;
-    margin-right: 20px;
 `;
 
 const List = styled.ul`
@@ -31,7 +30,8 @@ const ListWrapper = styled.div`
     border-radius: 4px;
     background: ${colors.mainlight};
     flex-grow: 1;
-    color: ${colors.secondarylight};
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 `;
 
 const ListItem = styled.li`

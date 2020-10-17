@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 `;
 
 const StyledLabel = styled.label`
-    color: ${colors.neutral};
+    color: ${colors.secondarylight};
     display: flex;
     flex-direction: column;
     font-size: 12px;
@@ -38,6 +38,7 @@ const OptionsList = styled.ul`
 const Option = styled.li`
     padding: 5px 12px;
     transition: all 0.3s ease;
+    color: ${colors.neutral};
     cursor: pointer;
 `;
 
