@@ -24,7 +24,7 @@ const ErrorNotification = styled.div<ErrorNotificationProps>`
 `;
 
 export function Notifications() {
-    const error: Record<string, string> | null = useStore($error);
+    const error: string = useStore($error);
     const [visible, setVisible] = React.useState<boolean>(false);
     const timeoutRefVisible = React.useRef<number>(0);
     const timeoutRefMounted = React.useRef<number>(0);
@@ -43,5 +43,5 @@ export function Notifications() {
         };
     }, [error, unmountDelay, hideDelay]);
 
-    return error && <ErrorNotification visible={visible}>{error.message}</ErrorNotification>;
+    return error ? <ErrorNotification visible={visible}>{error}</ErrorNotification> : null;
 }

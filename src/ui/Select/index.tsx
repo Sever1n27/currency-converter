@@ -1,19 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Event } from 'effector';
-import { useCombobox, UseComboboxStateChange } from 'downshift';
+import { useSelect } from 'downshift';
 import { colors } from '@constants';
 import { Button } from '@ui';
+
+const Wrapper = styled.div`
+    position: relative;
+`;
 
 const StyledLabel = styled.label`
     color: ${colors.neutral};
     display: flex;
     flex-direction: column;
     font-size: 12px;
-`;
-
-const ComboBox = styled.div`
-    display: flex;
+    position: relative;
 `;
 
 const OptionsList = styled.ul`
@@ -28,84 +29,62 @@ const OptionsList = styled.ul`
     top: 100%;
     left: 0;
     right: 0;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+    &:focus {
+        outline: none;
+    }
 `;
 
 const Option = styled.li`
     padding: 5px 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
 `;
-
-const InputWrapper = styled.div`
-    position: relative;
-`;
-
-// TODO: problems with styled-components and {...getInputProps()}
-const inputStyle = {
-    border: `2px solid ${colors.neutral}`,
-    borderRadius: '4px',
-    padding: '12px',
-    transition: 'all 0.3s ease',
-};
 
 type SelectProps = {
     label?: string;
     value: string;
     disabled?: boolean;
-    options: { label: string; value: any }[];
+    options: string[];
     onChange: Event<string>;
 };
 
 export function Select(props: SelectProps) {
     const { onChange, label, value, disabled, options } = props;
-    const [inputItems, setInputItems] = React.useState(options);
-    const itemToString = (item: { value: any; label: string } | null) => (item ? item.label : '');
-    const handleChange = (value: UseComboboxStateChange<{ label: string; value: any }>) => {
-        onChange(value.selectedItem?.value);
-    };
-    const {
-        isOpen,
-        getToggleButtonProps,
-        getMenuProps,
-        getInputProps,
-        getComboboxProps,
-        highlightedIndex,
-        getItemProps,
-    } = useCombobox({
-        items: inputItems,
-        selectedItem: options.find((item) => item.label === value) || null,
-        onSelectedItemChange: handleChange,
-        itemToString,
-        onInputValueChange: ({ inputValue }) => {
-            setInputItems(
-                options.filter((item) =>
-                    itemToString(item)
-                        .toLowerCase()
-                        .startsWith(inputValue ? inputValue.toLowerCase() : ''),
-                ),
-            );
-        },
+    function handleSelectedItemChange({ selectedItem }: { selectedItem?: string | null }) {
+        if (typeof onChange === 'function' && selectedItem) {
+            onChange(selectedItem);
+        }
+    }
+
+    const { isOpen, getToggleButtonProps, getLabelProps, getMenuProps, highlightedIndex, getItemProps } = useSelect({
+        items: options,
+        onSelectedItemChange: handleSelectedItemChange,
+        selectedItem: value,
     });
 
     return (
-        <StyledLabel>
-            {label || ''}
-            <ComboBox {...getComboboxProps()}>
-                <InputWrapper>
-                    <input style={inputStyle} {...getInputProps()} disabled={disabled} />
-                    <OptionsList {...getMenuProps()}>
-                        {isOpen &&
-                            inputItems.map((item, index) => (
-                                <Option
-                                    style={highlightedIndex === index ? { backgroundColor: '#bde4ff' } : {}}
-                                    key={`${item}${index}`}
-                                    {...getItemProps({ item, index })}
-                                >
-                                    {item.label.split('')}
-                                </Option>
-                            ))}
-                    </OptionsList>
-                </InputWrapper>
-                <Button type="button" {...getToggleButtonProps()} aria-label="toggle menu" label="Toggle" />
-            </ComboBox>
-        </StyledLabel>
+        <Wrapper>
+            <StyledLabel {...getLabelProps()}>
+                {label || ''}
+                <Button disabled={disabled} type="button" label={value} {...getToggleButtonProps()} />
+            </StyledLabel>
+            <OptionsList {...getMenuProps()}>
+                {isOpen &&
+                    options.map((item, index) => (
+                        <Option
+                            style={
+                                highlightedIndex === index
+                                    ? { backgroundColor: `${colors.secondary}`, color: `${colors.text}` }
+                                    : {}
+                            }
+                            key={`${item}${index}`}
+                            {...getItemProps({ item, index })}
+                        >
+                            {item}
+                        </Option>
+                    ))}
+            </OptionsList>
+        </Wrapper>
     );
 }

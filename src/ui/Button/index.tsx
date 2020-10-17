@@ -12,7 +12,7 @@ const StyledButton = styled.button`
     cursor: pointer;
     transition: all 0.3s ease;
     &:hover {
-        background: ${colors.mainlight};
+        background: ${colors.secondary};
     }
     &:focus {
         outline: none;

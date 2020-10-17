@@ -1,73 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
+import { useStore } from 'effector-react';
+import { $isLoading } from '../../core/models/converter';
+import refreshIcon from './refresh.svg';
 
-const bounce = keyframes`
+const rotate = keyframes`
     0% {
-        transform: scale(0)
-    }
-    50% {
-        transform: scale(1.0)
+        transform: rotate(0deg);
     }
     100% {
-        transform: scale(0)
+        transform: rotate(360deg);
     }
 `;
 
-const Dot = styled.div`
-    width: 10px;
-    height: 10px;
-    background-color: #2d55b2;
-    border-radius: 50%;
-    display: inline-block;
-    animation: ${bounce} 1.4s infinite ease-in-out both;
-    & + & {
-        margin-left: 5px;
+const StyledButton = styled.button`
+    width: 20px;
+    height: 20px;
+    border: none;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    cursor: pointer;
+    &:disabled {
+        cursor: default;
+        animation-name: ${rotate};
+        background-image: url(${refreshIcon});
     }
-    :nth-child(1) {
-        animation-delay: -0.32s;
+    &:focus {
+        outline: none;
     }
-    :nth-child(2) {
-        animation-delay: -0.16s;
-    }
-    :nth-child(3) {
-        animation-delay: -0s;
-    }
-`;
-
-const Wrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.7);
-    z-index: 10;
 `;
 
 export function Preloader() {
     const [visible, setVisible] = React.useState<boolean>(false);
     const timeoutRef = React.useRef<number>(0);
-    const revealDelay = 200;
-    React.useEffect(() => {
-        timeoutRef.current = setTimeout(() => setVisible(true), revealDelay);
-        return () => {
+    const loading = useStore<boolean>($isLoading);
+    const visibilityDelay = 200;
+    useEffect(() => {
+        if (loading) {
+            timeoutRef.current = setTimeout(() => setVisible(true), visibilityDelay);
+        } else {
             clearTimeout(timeoutRef.current);
             setVisible(false);
-        };
-    }, [revealDelay]);
+        }
+    }, [loading]);
 
-    return visible ? (
-        <Wrapper>
-            <Dot />
-            <Dot />
-            <Dot />
-        </Wrapper>
-    ) : null;
+    return visible ? <StyledButton disabled={loading} /> : null;
 }

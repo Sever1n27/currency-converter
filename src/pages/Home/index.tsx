@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import { useStore } from 'effector-react';
 import { Currencies } from '@types';
-import { Preloader, BaseCurrency } from '@features';
-import { fetchCurrencies, $currencies } from '../../core/models/converter';
+import { BaseCurrency } from '@features';
+import { $currencies } from '../../core/models/converter';
 import { colors } from '@constants';
 
 const Wrapper = styled.div`
@@ -57,11 +57,9 @@ const CurrencyName = styled.span`
 `;
 
 export function Home() {
-    const loading: boolean = useStore(fetchCurrencies.pending);
     const currenciesList: Currencies = useStore($currencies);
     return (
         <Wrapper>
-            {loading && <Preloader />}
             {currenciesList && (
                 <CurrenciesWrapper>
                     <BaseCurrency />

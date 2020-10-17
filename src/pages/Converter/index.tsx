@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useStore } from 'effector-react';
-import { Preloader, BaseCurrency, OutputCurrency } from '@features';
+import { BaseCurrency, OutputCurrency } from '@features';
 import {
-    fetchCurrencies,
     $currencies,
     $baseCurrency,
     $secondaryCurrency,
@@ -11,6 +10,7 @@ import {
     $secondaryAmount,
     changeBaseAmount,
     swapCurrencies,
+    $isLoading,
 } from '../../core/models/converter';
 import { Currencies } from '@types';
 import { Input, Button } from '@ui';
@@ -46,7 +46,7 @@ const SwapWrapper = styled.div`
 `;
 
 export function Converter() {
-    const loading: boolean = useStore(fetchCurrencies.pending);
+    const loading: boolean = useStore($isLoading);
     const baseCurrency: string = useStore($baseCurrency);
     const secondaryCurrency: string = useStore($secondaryCurrency);
     const baseAmount: number = useStore($baseAmount);
@@ -54,7 +54,6 @@ export function Converter() {
     const currenciesList: Currencies = useStore($currencies);
     return (
         <Wrapper>
-            {loading && <Preloader />}
             {currenciesList && (
                 <>
                     <BaseCurrency />

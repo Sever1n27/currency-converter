@@ -16,6 +16,7 @@ export const changeBaseCur = createEvent<string>();
 export const changeSecondaryCur = createEvent<string>();
 export const swapCurrencies = createEvent();
 export const fetchCurrencies = createEffect(fetchCurrenciesRequest);
+export const $isLoading = fetchCurrencies.pending;
 export const $currencies = restore<Currencies>(fetchCurrencies.doneData, null);
 export const $baseCurrency = restore(changeBaseCur, 'EUR');
 export const $secondaryCurrency = restore(changeSecondaryCur, 'CAD');
@@ -24,9 +25,7 @@ export const changeBaseAmount = createEvent<number>();
 export const $baseAmount = restore(changeBaseAmount, 0);
 export const $secondaryAmount = combine($baseAmount, $secondaryCurrency, $rates, calculateTargetAmount);
 
-export const $currenciesOptions = $rates.map((currenciesList) =>
-    Object.keys(currenciesList).map((key) => ({ label: key, value: key })),
-);
+export const $currenciesOptions = $rates.map((currenciesList) => Object.keys(currenciesList).map((key) => key));
 
 const swapped = sample(combine($baseCurrency, $secondaryCurrency), swapCurrencies);
 
