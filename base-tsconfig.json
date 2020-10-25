@@ -2,27 +2,13 @@
     "compilerOptions": {
         "baseUrl": "./src",
         "paths": {
-            "@constants": [
-                "constants"
-            ],
-            "@features": [
-                "features"
-            ],
-            "@ui": [
-                "ui"
-            ],
-            "@core": [
-                "core"
-            ],
-            "@pages": [
-                "pages"
-            ],
-            "@types": [
-                "types"
-            ]
+            "@constants": ["constants"],
+            "@features": ["features"],
+            "@ui": ["ui"],
+            "@core": ["core"],
+            "@pages": ["pages"],
+            "@types": ["types"]
         }
     },
-    "include": [
-        "src/**/*"
-    ]
+    "include": ["src/**/*"]
 }
